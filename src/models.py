@@ -18,10 +18,15 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.email
         
+
     def serialize(self):
         return {
-            "id": self.uid,
+            "uid": self.uid,
             "email": self.email,
+            "first_name" : self.first_name,
+            "second_name" : self.second_name,
+            "password" : self.password,
+            "is_active" : self.is_active,
         }
     def serialize2(self):
         return {
@@ -53,6 +58,9 @@ class Characters(db.Model):
     homeworld = db.Column(db.String(20))
     like_by_users = db.relationship("Favorites_Characters")
 
+    def __repr__(self):
+        return '<Character %r>' % self.name
+
     def serialize(self):
         return {
             "uid": self.uid,
@@ -74,8 +82,7 @@ class Characters(db.Model):
             "name": self.name,
             "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/people/{self.uid}"
         }
-    def __repr__(self):
-        return '<Character %r>' % self.name
+    
 
 class Planet(db.Model):
     __tablename__ = "planet"
@@ -89,9 +96,12 @@ class Planet(db.Model):
     climate = db.Column(db.String(20)) 
     terrain = db.Column(db.String(20)) 
     surface_water = db.Column(db.Integer)
-    created = db.Column(db.Date)
+    created = db.Column(db.Date) 
     edited = db.Column(db.Date)
     like_by_users = db.relationship("Favorites_Planets")
+
+     def __repr__(self):
+        return '<Planet %r>' % self.name
 
     def serialize(self):
         return {
@@ -114,8 +124,7 @@ class Planet(db.Model):
             "name": self.name,
             "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/planet/{self.uid}"
         }
-    def __repr__(self):
-        return '<Planet %r>' % self.name
+   
 
 class Vehicle(db.Model):
     __tablename__ = "vehicle"
@@ -137,6 +146,9 @@ class Vehicle(db.Model):
     created = db.Column(db.Date)
     edited = db.Column(db.Date)
     like_by_users = db.relationship("Favorites_Vehicles")
+
+    def __repr__(self):
+        return '<Vehicle %r>' % self.name
 
     def serialize(self):
         return {
@@ -164,8 +176,7 @@ class Vehicle(db.Model):
             "name": self.name,
             "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/vehicle/{self.uid}"
         }
-    def __repr__(self):
-        return '<Vehicle %r>' % self.name
+    
 
 class Favorites_Characters(db.Model):
     __tablename__ = "favorites_characters"
@@ -173,6 +184,9 @@ class Favorites_Characters(db.Model):
     user_uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
     character_uid = db.Column(db.Integer, db.ForeignKey('characters.uid'))
     
+     def __repr__(self):
+        return '<Favorite-character %r>' % self.uid 
+
     def serialize(self):
         return {       
             "uid": self.uid,
@@ -184,37 +198,17 @@ class Favorites_Characters(db.Model):
             "uid": self.uid,
             "name": self.user_uid,
             "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/favorite-character/{self.uid}"
-        }
-    def __repr__(self):
-        return '<Favorite-character %r>' % self.uid    
-
-class Favorites_Vehicles(db.Model):
-    __tablename__ = "favorites_vehicles"
-    uid = db.Column(db.Integer, primary_key=True)
-    user_uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
-    vehicle_uid = db.Column(db.Integer, db.ForeignKey('vehicle.uid'))
-
-    def serialize(self):
-        return {       
-            "uid": self.uid,
-            "user_uid": self.user_uid,
-            "vehicle_uid" : self.vehicle_uid,
-        } 
-    def serialize2(self):
-        return {
-            "uid": self.uid,
-            "name": self.user_uid,
-            "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/favorite-vehicle/{self.uid}"
-        }
-    def __repr__(self):
-        return '<Favorite-vehicle %r>' % self.uid    
-
+        }   
+        
 class Favorites_Planets(db.Model):
     __tablename__ = "favorites_planets"
     uid = db.Column(db.Integer, primary_key=True)
     user_uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
     planet_uid = db.Column(db.Integer, db.ForeignKey('planet.uid'))
 
+    def __repr__(self):
+        return '<Favorite-planet %r>' % self.uid    
+        
     def serialize(self):
         return {       
             "uid": self.uid,
@@ -228,4 +222,26 @@ class Favorites_Planets(db.Model):
             "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/favorite-planet/{self.uid}"
         }
     def __repr__(self):
-        return '<Favorite-planet %r>' % self.uid    
+        return '<Favorite-planet %r>' % self.uid  
+
+class Favorites_Vehicles(db.Model):
+    __tablename__ = "favorites_vehicles"
+    uid = db.Column(db.Integer, primary_key=True)
+    user_uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
+    vehicle_uid = db.Column(db.Integer, db.ForeignKey('vehicle.uid'))
+
+    def __repr__(self):
+        return '<Favorite-vehicle %r>' % self.uid  
+
+    def serialize(self):
+        return {       
+            "uid": self.uid,
+            "user_uid": self.user_uid,
+            "vehicle_uid" : self.vehicle_uid,
+        } 
+    def serialize2(self):
+        return {
+            "uid": self.uid,
+            "name": self.user_uid,
+            "url": f"https://3000-sapphire-felidae-jkwjegdk.ws-us03.gitpod.io/favorite-vehicle/{self.uid}"
+        }  
